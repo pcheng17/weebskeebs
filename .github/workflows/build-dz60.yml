@@ -1,0 +1,24 @@
+name: Build dz60
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    container: qmkfm/qmk_cli
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: Create symlinks
+      run: python3 ./setup.py
+    - name: Build firmware
+      run: |
+       make -C qmk_firmware dz60:kcwebers
+    - name: Archive artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: dz60
+        path: ./qmk_firmware/dz60_kcwebers.hex
